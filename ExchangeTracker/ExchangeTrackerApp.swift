@@ -11,21 +11,22 @@ import SwiftData
 @main
 struct ExchangeTrackerApp: App {
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([
-            Item.self,
-        ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+           let schema = Schema([CachedAsset.self])
+           let modelConfiguration = ModelConfiguration(schema: schema)
+           
+           do {
+               return try ModelContainer(for: schema, configurations: [modelConfiguration])
+           } catch {
+               return try! ModelContainer(for: schema, configurations: [
+                              ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+                          ])
+           }
+       }()
+       
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppRootView()
         }
         .modelContainer(sharedModelContainer)
     }
