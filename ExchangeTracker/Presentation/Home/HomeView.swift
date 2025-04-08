@@ -80,7 +80,7 @@ struct HomeView: View {
                 Text(asset.name)
                     .font(.caption)
                     .foregroundColor(.gray)
-                    .accessibilityIdentifier("AssetName_\(asset.id)")
+                    .accessibilityIdentifier("AssetName_\(asset.name)")
             }
             
             Spacer()

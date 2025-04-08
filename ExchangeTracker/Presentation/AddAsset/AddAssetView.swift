@@ -60,7 +60,7 @@ struct AddAssetView: View {
         return HStack {
             VStack(alignment: .leading) {
                 Text(asset.name)
-                    .accessibilityIdentifier("AssetName_\(asset.id)")
+                    .accessibilityIdentifier("AssetName_\(asset.name)")
                 Text(asset.id)
                     .font(.caption)
                     .foregroundColor(.gray)
