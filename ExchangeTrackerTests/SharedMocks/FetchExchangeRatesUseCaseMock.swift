@@ -8,13 +8,20 @@
 @testable import ExchangeTracker
 
 final class FetchExchangeRatesUseCaseMock: FetchExchangeRatesUseCaseProtocol {
-   var result: [ExchangeRate] = []
-   var error: Error?
+    var result: [ExchangeRate] = []
+    var error: Error?
+    
+ 
+    var receivedAssets: [Asset] = []
+    var receivedPrevious: [String: Double] = [:]
 
-    func execute(for assets: [Asset]) async throws -> [ExchangeRate] {
-            if let error = error {
-                throw error
-            }
-            return result
+    func execute(for assets: [Asset], previous: [String: Double]) async throws -> [ExchangeRate] {
+        receivedAssets = assets
+        receivedPrevious = previous
+        
+        if let error = error {
+            throw error
         }
+        return result
+    }
 }

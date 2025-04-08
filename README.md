@@ -19,11 +19,11 @@ A SwiftUI app to track real-time exchange rates for selected assets (fiat & cryp
 
 ## 📦 API Used
 
-- **[OpenExchangeRates API](https://openexchangerates.org/)**  
-  - `/latest.json` for rates  
-  - `/currencies.json` for asset list  
+- **[OpenExchangeRates API](https://api.coingecko.com/api/v3)**  
+  - `/simple/price` for rates  
+  - `/simple/supported_vs_currencies` for asset list  
 
-> You can replace the "app_id" key with yours in `ExchangeEndPoints`.
+> You can replace the "x-cg-demo-api-key" key with yours in `ExchangeEndPoints`.
 
 ---
 

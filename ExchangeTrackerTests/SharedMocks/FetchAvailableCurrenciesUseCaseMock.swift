@@ -10,8 +10,11 @@ final class FetchAvailableCurrenciesUseCaseMock: FetchAvailableCurrenciesUseCase
     var result: [Asset] = []
     var error: Error?
 
-    func execute() async throws -> [Asset] {
-        if let error { throw error }
-        return result
-    }
+    var receivedCurrentlySelected: [Asset] = []
+
+       func execute(currentlySelected: [Asset]) async throws -> [Asset] {
+           receivedCurrentlySelected = currentlySelected
+           if let error { throw error }
+           return result
+       }
 }
