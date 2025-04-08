@@ -6,53 +6,50 @@
 //
 
 public enum ExchangeEndPoints: EndPointType {
-    case currencyRate([Asset])
-    case currencies
+    case cryptoRates(ids: [String], vsCurrencies: [String])
+    case fiatRates(base: String, vsCurrencies: [String])
+    case allAssets
     
-
+    
     var baseURL: String {
-        "https://openexchangerates.org/api"
+        "https://api.coingecko.com/api/v3"
     }
-
+    
     var path: String {
         switch self {
-        case .currencyRate:
-            return "/latest.json"
-        case .currencies:
-            return "/currencies.json"
+        case .cryptoRates, .fiatRates:
+            return "/simple/price"
+        case .allAssets:
+            return "/simple/supported_vs_currencies"
         }
     }
-
-    var httpMethod: HTTPMethod {
-        switch self {
-        case .currencyRate, .currencies:
-            return .get
-        }
-    }
-
+    
+    var httpMethod: HTTPMethod { .get }
+    
+    
     var parameters: Parameters? {
         switch self {
-        case .currencyRate(let assets):
-                   return [
-                       "app_id": "7f92d395e47c4ee7939326121e283211",
-                       "base": "USD",
-                       "symbols": assets.map { $0.id }.joined(separator: ",")
-                   ]
-               case .currencies:
-                   return [
-                       "app_id": "7f92d395e47c4ee7939326121e283211"
-                   ]
+            
+        case .cryptoRates(let ids, let vsCurrencies):
+            return ["ids": ids.joined(separator: ","), "vs_currencies": vsCurrencies.joined(separator: ",")]
+        case .fiatRates(let base, let vsCurrencies):
+            return ["ids": base, "vs_currencies": vsCurrencies.joined(separator: ",")]
+        default:
+            return nil
         }
     }
-
+    
     var encoding: ParameterEncoding {
         switch self {
-            default:
+        default:
             return .url
         }
     }
-
+    
     var headers: HTTPHeaders {
-        ["Accept": "application/json"]
+        [
+            "Accept": "application/json",
+            "x-cg-demo-api-key": "CG-i2tXxn9F4NQ98Uf6VwKfxi8x"
+        ]
     }
 }

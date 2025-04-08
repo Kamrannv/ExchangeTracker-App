@@ -27,10 +27,10 @@ final class AppDIContainer {
 
     // MARK: - UseCases
     lazy var fetchExchangeRatesUseCase: FetchExchangeRatesUseCase = {
-        FetchExchangeRatesUseCase(repository: exchangeRepository)
+        FetchExchangeRatesUseCase(repository: exchangeRepository, factory: ExchangeRateFactory())
     }()
     
     lazy var fetchAvailableCurrenciesUseCase: FetchAvailableCurrenciesUseCase = {
-        FetchAvailableCurrenciesUseCase(repository: exchangeRepository)
+        FetchAvailableCurrenciesUseCase(repository: exchangeRepository, factory: AssetFactory())
        }()
 }

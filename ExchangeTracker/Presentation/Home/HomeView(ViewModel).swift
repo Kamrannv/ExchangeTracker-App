@@ -38,8 +38,7 @@ final class HomeViewModel: BaseViewModel<HomeState, HomeEvent, Never> {
             Task { await fetchRates(showLoading: true) }
             
         case .removeAsset(let indexes):
-            update { $0.assets.remove(atOffsets: indexes) }
-            saveAssets()
+            removeAssets(at: indexes)
             
         case .refresh:
             Task { await fetchRates(showLoading: false) }
@@ -54,7 +53,7 @@ final class HomeViewModel: BaseViewModel<HomeState, HomeEvent, Never> {
     
     private func startAutoRefresh() {
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true) { [weak self] _ in
             Task { await self?.fetchRates(showLoading: false)}
         }
     }
@@ -64,7 +63,9 @@ final class HomeViewModel: BaseViewModel<HomeState, HomeEvent, Never> {
             update { $0.isLoading = true }
         }
         do {
-            let result = try await useCase.execute(for: state.assets)
+            let previous = state.rates.mapValues { $0.value }
+                    let result = try await useCase.execute(for: state.assets, previous: previous)
+
             update {
                 $0.rates = Dictionary(uniqueKeysWithValues: result.map { ($0.id, $0) })
                 $0.error = nil
@@ -77,6 +78,16 @@ final class HomeViewModel: BaseViewModel<HomeState, HomeEvent, Never> {
                 if showLoading { $0.isLoading = false }
             }
         }
+    }
+    private func removeAssets(at indexes: IndexSet) {
+            update { state in
+                state.assets.remove(atOffsets: indexes)
+                state.rates = state.rates.filter { key, _ in
+                            state.assets.contains(where: { $0.id == key })
+                        }
+            }
+        saveAssets()
+        Task { await fetchRates(showLoading: true) }
     }
     private func saveAssets() {
         guard let modelContext else { return }
@@ -106,8 +117,4 @@ final class HomeViewModel: BaseViewModel<HomeState, HomeEvent, Never> {
         }
     }
 }
-extension Container where S == HomeState, I == HomeEvent, R == Never {
-    func setSwiftDataContext(_ context: ModelContext) {
-        (viewModel as? HomeViewModel)?.setContext(context)
-    }
-}
+ 

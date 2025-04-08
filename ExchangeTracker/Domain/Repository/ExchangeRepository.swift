@@ -7,6 +7,7 @@
 import Foundation
 
 protocol ExchangeRepository {
-    func getRates(for assets: [Asset]) async throws -> [ExchangeRate]
-    func getAvailableCurrencies() async throws -> [Asset]
+    func getRawCryptoRates(ids: [String], vs: [String]) async throws -> [String: [String: Double]]
+    func getRawFiatRates(base: String, vs: [String]) async throws -> [String: [String: Double]]
+    func getRawAllAssets() async throws -> [String]
 }

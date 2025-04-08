@@ -13,7 +13,7 @@ public enum AssetType: String, Codable {
 }
 
 public struct Asset: Identifiable, Codable, Hashable {
-    public let id: String // UUID or String?
+    public let id: String  
     let name: String
     let type: AssetType
 }

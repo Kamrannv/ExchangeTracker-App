@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import SwiftData
 
 @MainActor
 open class Container<S: UIState, I: UIIntent, R>: ObservableObject {
@@ -47,3 +48,8 @@ extension Container {
 }
 
 
+extension Container where S == HomeState, I == HomeEvent, R == Never {
+    func setSwiftDataContext(_ context: ModelContext) {
+        (viewModel as? HomeViewModel)?.setContext(context)
+    }
+}

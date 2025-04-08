@@ -23,3 +23,9 @@ extension ExchangeRate {
         percentageChange >= 0 ? .green : .red
     }
 }
+struct ExchangeRateCalculator {
+    static func calculatePercentageChange(current: Double, previous: Double?) -> Double {
+        guard let previous, previous != 0 else { return 0 }
+        return ((current - previous) / previous) * 100
+    }
+}

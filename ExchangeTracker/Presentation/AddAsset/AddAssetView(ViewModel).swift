@@ -38,7 +38,7 @@ final class AddAssetViewModel: BaseViewModel<AddAssetState, AddAssetEvent, Never
     
     private func loadCurrencies() async {
         do {
-            let currencies = try await fetchAvailableCurrenciesUseCase.execute()
+            let currencies = try await fetchAvailableCurrenciesUseCase.execute(currentlySelected: state.selectedAssets)
             update { $0.allAssets = currencies }
         } catch {
             handleError(error)

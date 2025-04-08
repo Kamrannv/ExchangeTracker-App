@@ -8,16 +8,20 @@ import Foundation
 
 final class ExchangeRepositoryImpl: ExchangeRepository {
     private let networkService: ExchangeNetworkServiceDelegate
-
+    
     init(networkService: ExchangeNetworkServiceDelegate) {
         self.networkService = networkService
     }
-
-    func getRates(for assets: [Asset]) async throws -> [ExchangeRate] {
-        return try await networkService.fetchRates(for: assets)
+    
+    func getRawCryptoRates(ids: [String], vs: [String]) async throws -> [String: [String: Double]] {
+        try await networkService.fetchRawCryptoRates(ids: ids, vsCurrencies: vs)
     }
     
-    func getAvailableCurrencies() async throws -> [Asset] {
-        try await networkService.fetchAvailableCurrencies()
-      }
+    func getRawFiatRates(base: String, vs: [String]) async throws -> [String: [String: Double]] {
+        try await networkService.fetchRawFiatRates(base: base, vsCurrencies: vs)
+    }
+    
+    func getRawAllAssets() async throws -> [String] {
+        try await networkService.fetchRawAllAssets()
+    }
 }
